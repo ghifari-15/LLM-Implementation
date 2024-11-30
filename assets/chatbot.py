@@ -1,22 +1,22 @@
 import re
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
-import pyttsx3  # Import pustaka untuk TTS
-from web_scraper import fetch_web_content  # Import fungsi dari file web_scraper.py
-from db import conn_db
+import pyttsx3  # Import pyttsx3
+from web_scraper import fetch_web_content  # Function import web_scrapper
+from db import conn_db # Import from conn_db.py file
 
 
 
 load_dotenv() 
 
-model = "gemini-1.5-flash"
+model = "gemini-1.5-flash" # Model from gemini
 llm = ChatGoogleGenerativeAI(model=model)
 
-engine = pyttsx3.init()  # Inisialisasi engine TTS
+engine = pyttsx3.init()  # Engine TTS initialize 
 
 
 def speak(text):
-    """Fungsi untuk mengubah teks menjadi suara"""
+    """Change text to voice"""
     engine.say(text)
     engine.runAndWait()
 
@@ -44,12 +44,12 @@ while True:
             messages.append(("ai", result.content))
             print("\n")
             print(result.content)
-            speak(clean_text_for_tts(result.content))  # Mengubah hasil analisis menjadi suara
+            speak(clean_text_for_tts(result.content))  # Change analyze result to voice
             conn_db.save_data("ai", result.content)
         else:
             print("\n")
             print(content)
-            speak(clean_text_for_tts(content))  # Jika gagal, juga memberikan output suara
+            speak(clean_text_for_tts(content))  # Give an output voice while failed
             conn_db.save_data("ai", content)
     else:
         messages.append(("human", user_input))
@@ -59,4 +59,4 @@ while True:
         conn_db.save_data("ai", result.content)
         print("\n")
         print(result.content)
-        speak(clean_text_for_tts(result.content))  # Mengubah hasil analisis menjadi suara
+        speak(clean_text_for_tts(result.content))  # Change analyze to voice
